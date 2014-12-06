@@ -26,3 +26,5 @@ parameters:
 
     google_client_id:                   foo
     google_client_secret:               foo
+
+    rabbitmq_url: amqp://guest:guest@localhost

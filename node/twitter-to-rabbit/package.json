@@ -1,0 +1,9 @@
+{
+    "name": "maerlyn-twitter-to-rabbit",
+    "version": "0.0.1",
+    "dependencies": {
+        "yamljs": "~0.2",
+        "amqplib": "~0.3",
+        "twitter": "~0.2"
+    }
+}
