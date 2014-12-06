@@ -19,7 +19,10 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    app_consumer_key:           foo
-    app_consumer_secret:        foo
-    user_access_token:          foo
-    user_access_token_secret:   foo
+    twitter_app_consumer_key:           foo
+    twitter_app_consumer_secret:        foo
+    twitter_user_access_token:          foo
+    twitter_user_access_token_secret:   foo
+
+    google_client_id:                   foo
+    google_client_secret:               foo
