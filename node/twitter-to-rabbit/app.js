@@ -1,12 +1,18 @@
 var yaml = require("yamljs"),
     amqplib = require("amqplib"),
     Twitter = require("twitter"),
-    twitter;
+    twitter,
+    knex;
 
 //config kulcsok hogy ne panaszkodjon a phpstorm es legyen kodkiegeszites
 //noinspection JSUnusedAssignment
 var config = {
         parameters: {
+            database_host: "",
+            database_port: "",
+            database_name: "",
+            database_user: "",
+            database_password: "",
             rabbitmq_url: "",
             twitter_app_consumer_key: "",
             twitter_app_consumer_secret: "",
@@ -20,8 +26,18 @@ var config = {
 
 config = yaml.load("../../app/config/parameters.yml");
 
+knex = require("knex")({
+    client: 'mysql',
+    connection: {
+        host: config.parameters.database_host,
+        user: config.parameters.database_user,
+        password: config.parameters.database_password,
+        database: config.parameters.database_name
+    }
+});
+
 console.log("[rabbit]\tconnecting");
-var rabbitReconnect = function () {
+function rabbitReconnect() {
     amqplib.connect(config.rabbitmq_url, {heartbeat: 60}).then(function (conn) {
         rabbitConnection = conn;
 
@@ -56,8 +72,17 @@ var rabbitReconnect = function () {
 
         setTimeout(rabbitReconnect, 60000);
     });
-};
+}
 rabbitReconnect();
+
+function sendDataToRabbit(tweet) {
+    if (rabbitChannel) {
+        var buffer = new Buffer(JSON.stringify(tweet));
+        rabbitChannel.publish("twitter", "twitter.data", buffer, { persistent: true });
+    } else {
+        missedData.push(tweet);
+    }
+}
 
 twitter = new Twitter({
     consumer_key: config.parameters.twitter_app_consumer_key,
@@ -67,23 +92,47 @@ twitter = new Twitter({
 });
 
 twitter.verifyCredentials(function (data) {
-    console.log("[twitter]\t" + JSON.stringify(data));
+    console.log("[twitter]\tcredentials verified " + JSON.stringify(data));
 });
 
 twitter.stream("user", {}, function (stream) {
+    var firstTweetReceived = false;
+
     console.log("[twitter]\tstreaming");
 
     stream.on("data", function (data) {
+        var isTweet = (undefined !== data.text && undefined !== data.user);
+
         if (undefined !== data.id) {
             //noinspection JSUnresolvedVariable
-            console.log("[twitter]\treceived tweet %d from @%s", data.id, data.user.screen_name);
+            console.log("[twitter]\treceived tweet %s from @%s", data.id_str, data.user.screen_name);
         }
 
-        if (rabbitChannel) {
-            var buffer = new Buffer(JSON.stringify(data));
-            rabbitChannel.publish("twitter", "twitter.data", buffer, { persistent: true });
-        } else {
-            missedData.push(data);
+        sendDataToRabbit(data);
+
+        if (!firstTweetReceived && isTweet) {
+            firstTweetReceived = true;
+
+            knex("tweet").max("id as latestTweetId").then(function (result) {
+                var latestTweetId = result[0].latestTweetId;
+
+                if (latestTweetId) {
+                    console.log("[twitter]\tfetching tweets between %s AND %s", latestTweetId, data.id_str);
+
+                    twitter.getHomeTimeline({
+                        count: 200,
+                        since_id: latestTweetId,
+                        max_id: data.id_str
+                    }, function (tweets) {
+                        var tweet;
+
+                        while (tweets.length) {
+                            tweet = tweets.shift();
+                            sendDataToRabbit(tweet);
+                        }
+                    });
+                }
+            });
         }
     });
 
