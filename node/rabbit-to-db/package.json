@@ -1,0 +1,11 @@
+{
+    "name": "maerlyn-rabbit-to-db",
+    "version": "0.0.1",
+    "dependencies": {
+        "yamljs": "~0.2",
+        "amqplib": "~0.3",
+        "knex": "~0.7",
+        "mysql": "~2.5",
+        "moment": "~2.8"
+    }
+}
