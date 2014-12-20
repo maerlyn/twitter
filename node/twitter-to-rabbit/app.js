@@ -1,3 +1,5 @@
+/*global require */
+
 var yaml = require("yamljs"),
     amqplib = require("amqplib"),
     Twitter = require("twitter"),
@@ -68,7 +70,7 @@ function rabbitReconnect() {
             }
         });
     }, function (err) {
-        console.error("[twitter]\t%s", JSON.stringify(err));
+        console.error("[rabbit]\t%s", JSON.stringify(err));
 
         setTimeout(rabbitReconnect, 60000);
     });
@@ -95,6 +97,35 @@ twitter.verifyCredentials(function (data) {
     console.log("[twitter]\tcredentials verified " + JSON.stringify(data));
 });
 
+function postLoadTweets(sinceId, maxId) {
+    console.log("[twitter]\tfetching tweets between %s AND %s", sinceId, maxId);
+
+    twitter.getHomeTimeline({
+        count: 200,
+        max_id: maxId
+    }, function (tweets) {
+        var tweet = { id_str: "" },
+            minIdReceived = false,
+            tweetsReceived = tweets.length;
+
+        console.log("[twitter]\tpost-loaded %d tweets", tweets.length);
+
+        while (tweets.length) {
+            tweet = tweets.shift();
+
+            sendDataToRabbit(tweet);
+
+            if (false === minIdReceived || minIdReceived > tweet.id_str) {
+                minIdReceived = tweet.id_str;
+            }
+        }
+
+        if (minIdReceived && tweetsReceived > 1) {
+            postLoadTweets(sinceId, minIdReceived);
+        }
+    });
+}
+
 twitter.stream("user", {}, function (stream) {
     var firstTweetReceived = false;
 
@@ -113,24 +144,13 @@ twitter.stream("user", {}, function (stream) {
         if (!firstTweetReceived && isTweet) {
             firstTweetReceived = true;
 
+            //noinspection JSUnresolvedFunction
             knex("tweet").max("id as latestTweetId").then(function (result) {
+                //noinspection JSUnresolvedVariable
                 var latestTweetId = result[0].latestTweetId;
 
                 if (latestTweetId) {
-                    console.log("[twitter]\tfetching tweets between %s AND %s", latestTweetId, data.id_str);
-
-                    twitter.getHomeTimeline({
-                        count: 200,
-                        since_id: latestTweetId,
-                        max_id: data.id_str
-                    }, function (tweets) {
-                        var tweet;
-
-                        while (tweets.length) {
-                            tweet = tweets.shift();
-                            sendDataToRabbit(tweet);
-                        }
-                    });
+                    postLoadTweets(latestTweetId, data.id_str);
                 }
             });
         }
