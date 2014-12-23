@@ -145,7 +145,7 @@ twitter.stream("user", {}, function (stream) {
             firstTweetReceived = true;
 
             //noinspection JSUnresolvedFunction
-            knex("tweet").max("id as latestTweetId").then(function (result) {
+            knex("tweet").column(knex.raw("CAST(MAX(id) AS CHAR) AS latestTweetId")).then(function (result) {
                 //noinspection JSUnresolvedVariable
                 var latestTweetId = result[0].latestTweetId;
 
