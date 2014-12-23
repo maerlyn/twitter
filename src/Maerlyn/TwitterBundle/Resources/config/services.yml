@@ -1,4 +1,3 @@
 services:
-#    maerlyn_twitter.example:
-#        class: Maerlyn\TwitterBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    twitter.user_provider:
+        class: Maerlyn\TwitterBundle\Security\Provider\OAuthUserProvider

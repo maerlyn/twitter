@@ -4,7 +4,7 @@ security:
             memory: ~
 
         hwi:
-            id: hwi_oauth.user.provider
+            id: twitter.user_provider
 
     firewalls:
         dev:
@@ -18,12 +18,12 @@ security:
             oauth:
                 resource_owners:
                     google: "/login/check-google"
-                login_path: /login
+                login_path: /connect/google
                 use_forward: false
                 failure_path: /
 
                 oauth_user_provider:
-                    service: hwi_oauth.user.provider
+                    service: twitter.user_provider
 
     access_control:
         - { path: ^/(login|connect), role: IS_AUTHENTICATED_ANONYMOUSLY }
