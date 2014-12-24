@@ -1,0 +1,11 @@
+<div class="panel panel-{% if tweet.read %}default{% else %}info{% endif %}" data-markasread="{{ path("maerlyn_twitter.tweet.mark_as_read", { id: tweet.id }) }}">
+    <div class="panel-heading">
+        <img src="{{ tweet.user.profileImageUrl }}" alt="{{ tweet.user.screenName }}" width="32" height="32" />
+        @{{ tweet.user.screenName }}
+        <abbr class="timeago" title="{{ tweet.createdAt|date("c") }}">{{ tweet.createdAt|date("c") }}</abbr>
+    </div>
+
+    <div class="panel-body">
+        {{ tweet.text }}
+    </div>
+</div>

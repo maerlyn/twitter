@@ -5,7 +5,7 @@ namespace Maerlyn\TwitterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Maerlyn\TwitterBundle\Entity\Repository\TweetRepository")
  * @ORM\Table(name="tweet")
  */
 class Tweet
@@ -73,7 +73,7 @@ class Tweet
     protected $raw;
 
     /**
-     * @ORM\Column(type="boolean", options={ "default"=false })
+     * @ORM\Column(type="boolean", name="is_read", options={ "default"=false })
      */
     protected $read = false;
 

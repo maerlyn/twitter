@@ -1,3 +1,7 @@
-maerlyn_twitter_homepage:
-    path:     /hello/{name}
+maerlyn_twitter.homepage:
+    path:     /
     defaults: { _controller: MaerlynTwitterBundle:Default:index }
+
+maerlyn_twitter.tweet.mark_as_read:
+    path:       /tweet/mark-as-read/{id}
+    defaults:   { _controller: MaerlynTwitterBundle:Tweet:markAsRead }

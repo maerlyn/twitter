@@ -1,5 +1,7 @@
 {% extends "::base.html.twig" %}
 
 {% block body %}
-Hello {{ name }}!
+
+    {% include "MaerlynTwitterBundle::_tweetList.html.twig" with { tweets: tweets } %}
+
 {% endblock %}

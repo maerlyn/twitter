@@ -6,8 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
 {
-    public function indexAction($name)
+    public function indexAction()
     {
-        return $this->render('MaerlynTwitterBundle:Default:index.html.twig', array('name' => $name));
+        $tweets = $this->getDoctrine()->getRepository("MaerlynTwitterBundle:Tweet")->findLatest(50);
+
+        return $this->render('MaerlynTwitterBundle:Default:index.html.twig', array("tweets" => $tweets));
     }
 }

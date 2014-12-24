@@ -121,7 +121,7 @@ class User
      * @param string $description
      * @return User
      */
-    public function setDescription($description)
+    public function setDescription($description = null)
     {
         $this->description = $description;
 

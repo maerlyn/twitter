@@ -1,0 +1,5 @@
+{% for tweet in tweets %}
+
+    {% include "MaerlynTwitterBundle::_tweet.html.twig" with { tweet: tweet } %}
+
+{% endfor %}
