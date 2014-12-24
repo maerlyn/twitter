@@ -165,6 +165,9 @@ handleReceivedData = function (msg) {
                     });
                 }
 
+                var buffer = new Buffer(JSON.stringify(tweet));
+                rabbitChannel.publish("twitter", "twitter.tweet", buffer);
+
                 doAck(msg);
             }).catch(function (err) {
                 console.log("[twitter]\terror while saving tweet %s: %s", tweet.id, JSON.stringify(err));

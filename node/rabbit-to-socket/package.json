@@ -1,0 +1,9 @@
+{
+  "name": "maerlyn-rabbit-to-socket",
+  "version": "0.0.1",
+  "dependencies": {
+    "yamljs": "~0.2",
+    "amqplib": "~0.3",
+    "socket.io": "~1.2"
+  }
+}
