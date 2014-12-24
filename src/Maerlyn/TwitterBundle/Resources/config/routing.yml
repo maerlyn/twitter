@@ -2,6 +2,24 @@ maerlyn_twitter.homepage:
     path:     /
     defaults: { _controller: MaerlynTwitterBundle:Default:index }
 
+maerlyn_twitter.tweet.show:
+    path:       /tweet/show/{id}
+    defaults:   { _controller: MaerlynTwitterBundle:Tweet:show }
+
 maerlyn_twitter.tweet.mark_as_read:
     path:       /tweet/mark-as-read/{id}
     defaults:   { _controller: MaerlynTwitterBundle:Tweet:markAsRead }
+    requirements:
+        _method: POST
+
+maerlyn_twitter.tweet.toggle_favorite:
+    path:       /tweet/toggle-favorite/{id}
+    defaults:   { _controller: MaerlynTwitterBundle:Tweet:toggleFavorite }
+    requirements:
+        _method: POST
+
+maerlyn_twitter.tweet.retweet:
+    path:       /tweet/retweet/{id}
+    defaults:   { _controller: MaerlynTwitterBundle:Tweet:retweet }
+    requirements:
+        _method: POST

@@ -1,3 +1,11 @@
 services:
     twitter.user_provider:
         class: Maerlyn\TwitterBundle\Security\Provider\OAuthUserProvider
+
+    twitter.api_exchange:
+        class: TwitterOAuth\Api
+        arguments: [%twitter_app_consumer_key%, %twitter_app_consumer_secret%, %twitter_user_access_token%, %twitter_user_access_token_secret%]
+
+    twitter.api:
+        class: Maerlyn\TwitterBundle\Service\TwitterService
+        arguments: [@twitter.api_exchange]
