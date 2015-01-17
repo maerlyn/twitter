@@ -23,3 +23,9 @@ maerlyn_twitter.tweet.retweet:
     defaults:   { _controller: MaerlynTwitterBundle:Tweet:retweet }
     requirements:
         _method: POST
+
+maerlyn_twitter.tweet.tweet:
+    path:       /tweet/tweet
+    defaults:   { _controller: MaerlynTwitterBundle:Tweet:tweet }
+    requirements:
+        _method: POST

@@ -9,3 +9,9 @@ services:
     twitter.api:
         class: Maerlyn\TwitterBundle\Service\TwitterService
         arguments: [@twitter.api_exchange]
+
+    twitter.twig_extension:
+        class: Maerlyn\TwitterBundle\Twig\TwitterTwigExtension
+        arguments: [@form.factory]
+        tags:
+            - { name: "twig.extension" }

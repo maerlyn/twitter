@@ -29,4 +29,16 @@ class TwitterService
 
         return $this->twitterApi->post($url);
     }
+
+    public function tweet($status, $in_reply_to_status_id)
+    {
+        $url = "statuses/update";
+        $params = ["status" => $status];
+
+        if ($in_reply_to_status_id) {
+            $params["in_reply_to_status_id"] = $in_reply_to_status_id;
+        }
+
+        return $this->twitterApi->post($url, $params);
+    }
 }

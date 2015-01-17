@@ -3,8 +3,10 @@
 namespace Maerlyn\TwitterBundle\Controller;
 
 use Maerlyn\TwitterBundle\Entity\Tweet;
+use Maerlyn\TwitterBundle\Form\TweetType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TweetController extends Controller
@@ -52,6 +54,29 @@ class TweetController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         return new Response("", Response::HTTP_NO_CONTENT);
+    }
+
+    public function tweetAction()
+    {
+        $this->mustBeAjax();
+
+        $request = $this->get("request_stack")->getCurrentRequest();
+        $form = $this->createForm(new TweetType());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $twitterApi = $this->get("twitter.api");
+
+            $status = $form->get("status")->getData();
+            $in_reply_to_status_id = $form->get("in_reply_to_status_id")->getData();
+
+            $resp = $twitterApi->tweet($status, $in_reply_to_status_id);
+            $this->get("logger")->addDebug("TWITTER RESPONSE " . json_encode($resp));
+
+            return new JsonResponse("", Response::HTTP_NO_CONTENT);
+        }
+
+        return new JsonResponse($resp, Response::HTTP_BAD_REQUEST);
     }
 
     private function mustBeAjax()

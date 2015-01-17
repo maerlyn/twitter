@@ -24,7 +24,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Maerlyn Twitter</a>
+                <a class="navbar-brand" href="{{ path("maerlyn_twitter.homepage") }}">Maerlyn Twitter</a>
             </div>
 
             <div id="navbar" class="collapse navbar-collapse">
@@ -33,12 +33,35 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
+
+                <button type="button" class="btn btn-primary btn-sm navbar-btn navbar-right" data-toggle="modal" data-target="#tweet_modal">New tweet</button>
             </div><!--/.nav-collapse -->
         </div>
     </nav>
 
     <div class="container">
         {% block body %}{% endblock %}
+    </div>
+
+    <div class="modal fade" id="tweet_modal" tabindex="-1" data-url="{{ path("maerlyn_twitter.tweet.tweet") }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New tweet</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_widget(tweet_form.status) }}
+                    {{ form_widget(tweet_form.in_reply_to_status_id) }}
+
+                    {{ form_widget(tweet_form._token) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

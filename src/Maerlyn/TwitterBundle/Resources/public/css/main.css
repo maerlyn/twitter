@@ -1,3 +1,8 @@
 body {
     padding-top: 70px;
 }
+
+#tweet_status {
+    resize: vertical;
+    height: 150px;
+}
