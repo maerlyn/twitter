@@ -66,11 +66,13 @@ class TweetController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $twitterApi = $this->get("twitter.api");
+            $data = $form->getData();
 
-            $status = $form->get("status")->getData();
-            $in_reply_to_status_id = $form->get("in_reply_to_status_id")->getData();
+            $status = $data["status"];
+            $in_reply_to_status_id = $data["in_reply_to_status_id"];
+            $media = $data["media"];
 
-            $resp = $twitterApi->tweet($status, $in_reply_to_status_id);
+            $resp = $twitterApi->tweet($status, $in_reply_to_status_id, $media);
             $this->get("logger")->addDebug("TWITTER RESPONSE " . json_encode($resp));
 
             return new JsonResponse("", Response::HTTP_NO_CONTENT);

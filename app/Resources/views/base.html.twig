@@ -51,10 +51,13 @@
                     <h4 class="modal-title" id="myModalLabel">New tweet</h4>
                 </div>
                 <div class="modal-body">
-                    {{ form_widget(tweet_form.status) }}
-                    {{ form_widget(tweet_form.in_reply_to_status_id) }}
+                    <form id="tweet_form">
+                        {{ form_widget(tweet_form.status) }}
+                        {{ form_widget(tweet_form.media) }}
+                        {{ form_widget(tweet_form.in_reply_to_status_id) }}
 
-                    {{ form_widget(tweet_form._token) }}
+                        {{ form_widget(tweet_form._token) }}
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
