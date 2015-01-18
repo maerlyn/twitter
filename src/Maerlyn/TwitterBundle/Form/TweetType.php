@@ -14,9 +14,12 @@ class TweetType extends AbstractType
             "constraints"   =>  new Assert\NotBlank(),
         ]);
 
-        $builder->add("in_reply_to_status_id", "hidden");
+        $builder->add("in_reply_to_status_id", "hidden", array(
+            "required"      =>  false,
+        ));
 
         $builder->add("media", "file", array(
+            "required"      =>  false,
             "constraints"   =>  new Assert\Image(),
         ));
     }

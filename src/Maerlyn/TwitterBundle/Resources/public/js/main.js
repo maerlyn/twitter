@@ -47,7 +47,15 @@ $(document).ready(function () {
 
     //reset new tweet form when shown
     $tweet_modal.on('show.bs.modal', function () {
-        $("#tweet_form")[0].reset();
+        $("#tweet_status").val("");
+        $("#tweet_in_reply_to_status_id").val("");
+        $("#tweet_media").val("");
+    });
+
+    $tweet_modal.on("shown.bs.modal", function () {
+        $("#tweet_status").focus();
+
+        moveCaretToEnd(document.getElementById('tweet_status'));
     });
 
     var $tweet_submit_button = $tweet_modal.find(".btn-primary");
@@ -70,4 +78,24 @@ $(document).ready(function () {
             processData: false
         });
     });
+
+    $(".reply-to-tweet").click(function () {
+        var id = $(this).data("tweet-id"),
+            username = $(this).data("username");
+
+        $tweet_modal.modal("show");
+        $("#tweet_in_reply_to_status_id").val(id);
+        $("#tweet_status").val("@" + username + " ");
+    });
 });
+
+function moveCaretToEnd(el) {
+    if (typeof el.selectionStart === "number") {
+        el.selectionStart = el.selectionEnd = el.value.length;
+    } else if (el.createTextRange !== undefined) {
+        el.focus();
+        var range = el.createTextRange();
+        range.collapse(false);
+        range.select();
+    }
+}

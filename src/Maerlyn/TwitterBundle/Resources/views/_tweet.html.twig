@@ -14,9 +14,15 @@
 
     <div class="panel-footer">
         <a href="https://twitter.com/{{ tweet.user.screenName }}/status/{{ tweet.id }}">[link]</a> |
+
+        <a href="javascript:void(0)" class="reply-to-tweet" data-tweet-id="{{ tweet.id }}" data-username="{{ tweet.user.screenName }}">
+            <span class="glyphicon glyphicon-share-alt"></span> reply
+        </a> |
+
         <a href="{{ path("maerlyn_twitter.tweet.toggle_favorite", { "id": tweet.id }) }}" class="load-and-refresh-tweet">
             <span class="glyphicon glyphicon-star"></span>{% if not tweet.favorited %} not{% endif %} favorited
         </a> |
+
         {% if not tweet.retweeted %}<a href="{{ path("maerlyn_twitter.tweet.retweet", { "id": tweet.id }) }}" class="load-and-refresh-tweet">{% endif %}
             <span class="glyphicon glyphicon-retweet"></span>{% if not tweet.retweeted %} not{% endif %} retweeted
         {% if not tweet.retweeted %}</a>{% endif %}
